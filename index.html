@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f4f1e9"><title>午后鱼缸</title>
+<link rel="icon" href="assets/guppy.webp">
+<link rel="stylesheet" href="style.css"><script defer src="daylight.js"></script><script defer src="water-optics.js"></script><script defer src="environment.js"></script><script defer src="plant.js"></script><script defer src="aquarium.js"></script>
+</head>
+<body>
+<main id="room">
+<div class="game">
+<header>
+<div class="name"><span class="tank-mark" aria-hidden="true"><i></i></span><div><h1>午后鱼缸</h1><p id="clock" title="跟随设备当地时间" aria-label="当地时间"></p></div></div>
+<div class="tools">
+<button type="button" id="pause" aria-pressed="false"><i class="pause-icon" aria-hidden="true"></i><span>暂停</span></button>
+<button type="button" id="expand" aria-pressed="false" aria-label="全屏观赏"><i class="expand-icon" aria-hidden="true"></i><span>全屏</span></button>
+</div>
+</header>
+<div class="stage" id="stage">
+<picture><source media="(orientation:portrait) and (max-width:900px)" srcset="assets/tank-square.webp"><img class="scene" src="assets/tank.webp" alt="阳光照进玻璃鱼缸，左侧是沉木和水草，右侧青石上落着水波的光影。" draggable="false"></picture>
+<canvas id="optics" hidden aria-hidden="true"></canvas>
+<canvas id="water" aria-hidden="true"></canvas>
+</div>
+<footer>
+<div class="stock" aria-label="缸里的鱼">
+<span><img data-species="guppy" src="assets/guppy.webp" alt="">孔雀鱼 <small>×1</small></span>
+<span><img data-species="tetra" src="assets/tetra.webp" alt="">霓虹灯鱼 <small>×3</small></span>
+<span><img data-species="whiteCloud" src="assets/white-cloud.webp" alt="">白云金丝鱼 <small>×1</small></span>
+</div>
+<div class="feeding"><div class="feed-info"><p id="message" role="status">轻点水面喂鱼</p><button type="button" id="plant-undo" hidden>撤销</button><span class="visually-hidden" id="feeding-audio" role="status"></span></div>
+<div class="care-actions"><button type="button" id="plant" class="secondary" aria-expanded="false" aria-controls="plant-editor">种水草</button>
+<button id="feed" class="primary" type="button"><i class="grains" aria-hidden="true"></i>撒点鱼食</button></div></div>
+<section id="plant-editor" hidden aria-label="摆放椒草">
+<div class="plant-heading"><strong>摆放椒草</strong><span id="plant-help" role="status">轻点沙面，或滑动微调</span></div>
+<div class="plant-sliders">
+<label for="plant-x"><span>左侧<span>右侧</span></span><input type="range" id="plant-x" min="100" max="900" value="490" aria-label="左右位置"></label>
+<label for="plant-z"><span>后景<span>前景</span></span><input type="range" id="plant-z" min="0" max="1000" value="450" aria-label="前后景深"></label>
+</div>
+<div class="plant-actions"><button type="button" id="plant-remove" hidden>移除水草</button><button type="button" id="plant-cancel" class="secondary">取消</button><button type="button" id="plant-save" class="primary">种下</button></div>
+</section>
+</footer>
+</div>
+</main>
+</body>
+</html>
