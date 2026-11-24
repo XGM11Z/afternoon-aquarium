@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#203932"><title>午后鱼缸</title><link rel="icon" href="assets/white-cloud.webp"><link rel="stylesheet" href="aquarium.css?v=391c281f0372"><script defer src="aquarium.js?v=118166118737"></script></head>
+<body><main>
+<header class="room-head"><div class="title"><img src="assets/white-cloud.webp" alt=""><h1>午后鱼缸</h1></div><div class="room-time"><button type="button" id="journal-open" aria-haspopup="dialog" aria-controls="discovery-book" title="观察手记" hidden><i aria-hidden="true" class="book-icon"></i>手记 <span></span></button><time id="local-clock" aria-label="当地时间"></time><button class="light-state" id="view-drawer" aria-expanded="false" aria-controls="view-options" aria-label="光线与取景"><i></i><span id="lamp-state">当地光线</span><span class="chevron" aria-hidden="true"></span></button></div></header>
+<dialog id="discovery-book" aria-labelledby="discovery-title"><div class="journal-heading"><h2 id="discovery-title">观察手记</h2><button class="plain">合上</button></div><p class="book-count"></p><p class="book-next"></p><ol></ol><p class="book-supplies">每一页只发现一种新住客或素材。继续写手记，也会补充以前领过的份数。取出的摆件和捞出的生物会腾出相应名额。</p></dialog>
+<div class="stage" id="stage"><canvas id="tank" tabindex="0" aria-label="鱼缸。轻点水面看鱼的反应。拿起饵瓶后，点水域投一小撮，或按回车。双指开合缩放，双指同向拖动可移动视角。"></canvas><button class="camera-switch" id="quick-camera" type="button" aria-label="放大近看" aria-controls="tank" title="放大近看" disabled><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path class="expand-frame" d="M9 4H4v5 M15 4h5v5 M20 15v5h-5 M9 20H4v-5"/><path class="contract-frame" d="M4 9h5V4 M15 4v5h5 M20 15h-5v5 M9 20v-5H4"/></svg></button><nav class="room-dock" aria-label="鱼缸工具">
+<button id="feed" aria-pressed="false" disabled><img src="assets/food-jar.webp" alt=""><span>投喂</span></button>
+<button id="care-drawer" aria-expanded="false" aria-controls="care-options"><img src="assets/glass-scraper.webp" alt=""><span>养护</span></button>
+<button id="residents-open" aria-expanded="false" aria-controls="residents-panel" disabled><img src="assets/landing-net.webp" alt=""><span>生物</span></button>
+<button id="edit" aria-expanded="false" aria-controls="editor" disabled><img src="assets/branch.webp" alt=""><span>造景</span></button>
+</nav><div class="room-drawer" id="care-options" role="group" aria-label="养护工具" hidden><div class="care-actions"><button class="plain" id="wipe-glass" aria-pressed="false" disabled><img src="assets/glass-scraper.webp" alt=""><span>擦缸</span></button><button class="plain" id="siphon" aria-pressed="false" disabled>吸底</button><button class="plain" id="water-change" disabled>换水 ¼</button><button class="plain" id="fine-filter" hidden>开启精滤</button><button type="button" class="plain" data-close-drawer="care">返回</button></div></div>
+<div id="care-hand" hidden><div class="hand-caption"><strong id="care-hand-name">擦缸</strong><small id="care-hand-hint"></small></div><button type="button" id="care-pan" aria-pressed="false">移视角</button><button type="button" id="care-put-away">放回</button></div><div id="load" role="status">正在布置鱼缸…</div></div>
+<div class="tank-notes" id="tank-notes" hidden><strong></strong><span></span></div><span id="spoken-observation" class="sr-only" role="status"></span>
+<div id="animal-view" hidden><span id="animal-caption"></span><button class="plain" id="animal-exit">回到全景</button></div>
+<section id="opening-note" aria-live="polite" aria-labelledby="opening-title" hidden>
+<div class="letter"><p class="letter-from" id="opening-from">阿禾的留条</p><h2 id="opening-title"></h2><p id="opening-copy"></p></div>
+<div class="letter-actions"><button class="primary" id="opening-action"></button><button class="plain" id="opening-skip">直接养鱼</button></div>
+</section>
+<section class="residents-panel" id="residents-panel" aria-labelledby="residents-heading" hidden>
+<div class="residents-head"><h2 id="residents-heading">缸中生物</h2><div class="capacity"><span id="stock-capacity"></span><meter id="stock-meter" min="0" max="24" value="0" aria-label="已用容量"></meter></div><button class="plain" id="residents-close">收起</button></div>
+<div class="stock-modes segments" role="group" aria-label="生物操作"><button id="stock-mode-add" aria-pressed="true">投放</button><button id="stock-mode-net" aria-pressed="false">捞出</button></div>
+<div id="stock-add-pane"><div id="stock-species" role="group" aria-label="选择种类"></div>
+<p id="stock-detail"></p><p id="stock-occupancy"></p>
+<div class="stock-action"><label for="stock-quantity">数量</label><div class="stock-step"><button id="stock-minus" aria-label="减少数量">−</button><input id="stock-quantity" type="number" min="1" max="24" value="1" step="1" inputmode="numeric"><button id="stock-plus" aria-label="增加数量">＋</button></div><button class="primary" id="stock-add">放入缸中</button><button class="plain" id="stock-observe">近观缸中个体</button></div></div>
+<div id="stock-net-pane" hidden><p id="net-hint">轻点缸里的个体，或从名单中选一只。</p><div class="stock-action"><label for="net-id">目标</label><select id="net-id"></select><button class="primary" id="net-go" disabled>捞出这只</button></div></div>
+<p id="stock-feedback" role="status" hidden></p>
+</section>
+<nav id="work-tabs" aria-label="布置工具" hidden><button data-tool="objects">摆件与水草</button><button data-tool="bed">底床</button></nav>
+<section id="turn-panel" class="turn-panel" aria-label="造景物角度" hidden>
+<div class="turn-which"><label for="turn-piece">转动物件</label><select id="turn-piece"></select></div>
+<div class="turn-choice"><div class="turn-caption"><span id="yaw-label">朝向</span><output id="yaw-value"></output></div><div id="yaw-strip" role="radiogroup" aria-labelledby="yaw-label"></div></div>
+<label class="tilt-control" for="tilt"><span>倾斜 <output id="tilt-value">0°</output></span><input id="tilt" aria-label="倾斜角度" type="range" min="-15" max="15" step="1" value="0"></label>
+</section>
+<section class="controls" aria-label="鱼缸控制">
+
+<div id="feeding-guide" class="feed-in-hand" hidden><img src="assets/food-jar.webp" alt=""><span>轻点鱼前方的水，投一小撮</span><button id="put-away">收起饵瓶</button></div>
+<div id="next-discovery" hidden><strong></strong><span></span><button></button></div>
+
+<div class="room-drawer" id="view-options" hidden><div class="drawer-head"><h2>光线与取景</h2><button class="plain" data-close-drawer="view">收起</button></div><div class="view-groups"><div class="group"><span class="label">光照</span><div class="segments" id="modes"><button data-mode="now">跟随时间</button><button data-mode="dawn">清晨</button><button data-mode="day">白天</button><button data-mode="dusk">黄昏</button><button data-mode="night">夜间</button></div></div>
+<div class="group"><span class="label" id="finish-label">画面</span><div class="segments" id="finish-modes" role="group" aria-labelledby="finish-label"><button data-finish="off" aria-pressed="false">原光</button><button data-finish="on" aria-pressed="true">自然润色</button></div></div>
+</div><div class="view-extras"><a id="visit-letter" href="?chapter=arrival&amp;visit=fieldbook">另开一缸体验来信</a><button class="plain" id="watch" hidden>近观水草</button><button id="care-hour" class="plain" hidden>推演 1 小时</button></div><div id="camera" hidden><label for="pan">左右取景</label><input id="pan" type="range" min="0" max="1000"></div></div>
+<section id="watch-tools" hidden aria-label="水草近观"><select id="watch-plant" aria-label="要观察的水草"></select><div class="segments" id="watch-age"><button data-age="actual">原株</button><button data-age="grown">成株预览</button></div><select id="watch-form" aria-label="预览成株株形" hidden></select><span id="watch-growth"></span><span class="watch-hint">轻划叶尖，看看叶片如何回弹</span><button id="close-watch" class="plain">回到鱼缸</button></section>
+<p id="care-note" role="status" hidden></p><span class="sr-only" id="feeding-status" role="status"></span>
+<section id="editor" hidden aria-label="鱼缸造景"><div class="edit-head"><div><h2 id="selection">布置鱼缸</h2><p id="hint">点选缸中的物件，或从列表中选择。</p></div><div class="actions"><button id="undo" class="plain">撤销</button><button id="compare" class="plain" aria-pressed="false">对照原景</button></div></div>
+<div id="bed-editor" hidden>
+<div class="bed-picks"><div><h3>底床材质</h3><div id="bed-styles"></div></div><div><h3>地形</h3><div id="bed-forms"><button data-form="flat">平底</button><button data-form="left">左岸高坡</button><button data-form="valley">双岸浅谷</button><button data-form="right">右岸高坡</button></div></div></div>
+<div class="bed-sculpt"><div class="bed-plan"><div class="bed-rows" aria-hidden="true"><span>后</span><span>中</span><span>前</span></div><div id="bed-map" aria-label="底床俯视选区"></div></div><div class="bed-height"><label for="bed-height"><span id="bed-place"></span><output id="bed-level"></output></label><input id="bed-height" type="range" min="0" max="54"><div class="actions"><button class="plain" id="bed-down">压低</button><button class="plain" id="bed-up">堆高</button></div></div></div>
+</div><div class="edit-body" id="object-editor"><section id="placement" aria-label="摆放物件"><div class="piece-picker">
+<button type="button" id="piece-open" aria-haspopup="dialog" aria-controls="piece-dialog"><span class="piece-image" aria-hidden="true"></span><span class="piece-caption"><small>选择物件</small><strong>缸中暂无摆件</strong></span><span class="piece-chevron" aria-hidden="true"></span></button>
+<button type="button" id="adjust-open" aria-haspopup="dialog" aria-controls="adjust-dialog"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M4 7h6m4 0h6M4 17h10m4 0h2"/><circle cx="12" cy="7" r="2.2"/><circle cx="16" cy="17" r="2.2"/></svg><span>更多调整</span></button>
+<button type="button" id="remove" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 7h15M9 7V5.5A1.5 1.5 0 0 1 10.5 4h3A1.5 1.5 0 0 1 15 5.5V7M6.5 7l.8 12a1.5 1.5 0 0 0 1.5 1.4h6.4a1.5 1.5 0 0 0 1.5-1.4l.8-12M10 10.5v6M14 10.5v6"/></svg><span>移除</span></button></div>
+<dialog class="piece-sheet" id="piece-dialog" aria-labelledby="piece-dialog-title"><header><h2 id="piece-dialog-title">选择缸中物件</h2><button type="button" class="plain" data-close-sheet>关闭</button></header><div id="piece-grid"></div></dialog>
+<dialog class="piece-sheet" id="adjust-dialog" aria-labelledby="adjust-dialog-title"><header><div><small>更多调整</small><h2 id="adjust-dialog-title">调整物件</h2></div><button type="button" class="plain" data-close-sheet>完成调整</button></header></dialog>
+<div id="placement-tools">
+<div class="size-row"><label for="size">大小 <output id="size-value" for="size"></output></label><button type="button" data-axis="size" data-step="-5" aria-label="缩小物件">−</button><input id="size" aria-label="物件大小" type="range" min="40" max="155" step="1"><button type="button" data-axis="size" data-step="5" aria-label="放大物件">＋</button></div>
+<div id="sliders" role="group" aria-label="物件位置">
+<div class="position-axis"><label for="x" id="x-name">左右位置</label><div class="range-ends" aria-hidden="true"><span id="x-start">左</span><span id="x-end">右</span></div><input id="x" type="range" min="0" max="1000"></div>
+<div class="position-axis" id="z-field"><label for="z">前后位置</label><div class="range-ends" aria-hidden="true"><span>后景</span><span>前景</span></div><input id="z" type="range" min="0" max="1000"></div>
+</div><details id="placement-plan"><summary>俯视定位</summary><p>点一个位置，把当前物件放到那里的沙面。</p><div class="plan-rows"></div></details></div></section><div class="tools">
+<div class="field" id="support-field" hidden><label for="support">放置在</label><select id="support"></select></div>
+<div id="grow-note" hidden></div>
+<div class="actions" id="object-actions"><button id="wall-left" class="plain">贴左壁</button><button id="wall-right" class="plain">贴右壁</button><button id="flip" class="plain">翻转</button><button id="duplicate" class="plain">复制一件</button></div></div>
+<div class="shelf"><div class="shelf-title">添加素材</div><div class="plant-shelf-note">水草图为成株。种下时是幼株，可在「近观水草」看它长成后的样子。</div><div id="palette"></div></div></div>
+<footer><div class="group"><label for="presets">参考造景</label><select id="presets"><option value="">选择构图</option><option value="black-bank">黑泥草坡</option><option value="fern-bank">裂叶溪岸</option><option value="creek">午后溪岸</option><option value="islands">双岛留白</option><option value="slope">林岸斜坡</option><option value="archway">林间拱桥</option></select></div><div class="actions"><button id="cancel" class="plain">取消</button><button id="done" class="primary">保存造景</button></div></footer>
+</section><p id="message" role="status" hidden></p></section>
+</main></body></html>
